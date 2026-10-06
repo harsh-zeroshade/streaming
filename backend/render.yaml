@@ -5,23 +5,23 @@ services:
     region: oregon
     plan: free
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node src/server.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
       - key: MONGODB_URI
-        sync: false          # set manually in Render dashboard
+        sync: false
       - key: JWT_SECRET
-        sync: false          # set manually in Render dashboard
+        sync: false
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: TMDB_API_KEY
-        sync: false          # set manually in Render dashboard
+        sync: false
       - key: TMDB_BASE_URL
         value: https://api.themoviedb.org/3
       - key: VIDCORE_BASE_URL
         value: https://vidsrc.to
       - key: CLIENT_URL
-        sync: false          # set to your Vercel frontend URL after deploy
+        sync: false
