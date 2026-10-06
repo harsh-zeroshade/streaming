@@ -67,3 +67,58 @@ exports.getMe = (req, res) => {
   const { _id: id, name, email, plan } = req.user
   res.json({ user: { id, name, email, plan } })
 }
+
+// POST /api/auth/update-profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body
+    if (!name?.trim()) return res.status(400).json({ message: 'Name is required.' })
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { name: name.trim() },
+      { new: true, runValidators: true }
+    )
+    res.json({ user: { id: user._id, name: user.name, email: user.email, plan: user.plan } })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+// POST /api/auth/change-password
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body
+    if (!currentPassword || !newPassword)
+      return res.status(400).json({ message: 'Both current and new password are required.' })
+    if (newPassword.length < 6)
+      return res.status(400).json({ message: 'New password must be at least 6 characters.' })
+
+    const user = await User.findById(req.user._id).select('+password')
+    if (!(await user.comparePassword(currentPassword)))
+      return res.status(401).json({ message: 'Current password is incorrect.' })
+
+    user.password = newPassword
+    await user.save()
+    res.json({ message: 'Password changed successfully.' })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+// POST /api/auth/update-plan
+exports.updatePlan = async (req, res) => {
+  try {
+    const { plan } = req.body
+    const validPlans = ['plan-basic', 'plan-standard', 'plan-premium']
+    if (!validPlans.includes(plan))
+      return res.status(400).json({ message: 'Invalid plan.' })
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { plan },
+      { new: true }
+    )
+    res.json({ user: { id: user._id, name: user.name, email: user.email, plan: user.plan } })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}

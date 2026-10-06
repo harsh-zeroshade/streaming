@@ -17,7 +17,7 @@ export default function HelpSupport() {
   })
 
   return (
-    <div style={{ minHeight: '100vh', paddingTop: 'clamp(80px,10vw,120px)', paddingBottom: 120 }}>
+    <div className="page-top" style={{ paddingBottom: 120 }}>
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '0 var(--pad)' }}>
 
         {/* Header */}
@@ -98,3 +98,4 @@ export default function HelpSupport() {
     </div>
   )
 }
+

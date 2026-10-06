@@ -15,6 +15,8 @@
     --pad:    clamp(20px, 4.1vw, 79px);
     --card-w: clamp(128px, 13vw, 250px);
     --font:   'Inter', system-ui, sans-serif;
+    /* Height of the fixed navbar — used for page top padding */
+    --nav-h:  clamp(90px, 11vh, 130px);
   }
 
   /* ── Base ── */
@@ -74,6 +76,9 @@
   /* wrapper div around settings button must not shift layout */
   header nav > div { display: contents; }
   header nav svg   { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* ── Page top padding — clears the fixed navbar ── */
+  .page-top { padding-top: var(--nav-h); }
 
   /* ── Sections — reference exact ── */
   main { position: relative; }

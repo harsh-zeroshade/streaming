@@ -64,7 +64,7 @@ export default function Series() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom,rgba(0,0,0,.45) 0%,rgba(0,0,0,.20) 50%,transparent)' }} />
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1, padding: '0 var(--pad)', paddingTop: 'clamp(92px,12vh,130px)' }}>
+      <div style={{ position: 'relative', zIndex: 1, padding: '0 var(--pad)', paddingTop: 'var(--nav-h)' }}>
         <h1 style={{ fontSize: 'clamp(40px,3.6vw,68px)', fontWeight: 700, letterSpacing: '-.02em', marginBottom: 'clamp(16px,2vw,24px)', textShadow: '0 2px 24px rgba(0,0,0,.4)' }}>
           Shows
         </h1>
@@ -155,3 +155,4 @@ export default function Series() {
     </div>
   )
 }
+

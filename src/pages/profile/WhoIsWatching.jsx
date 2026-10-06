@@ -11,7 +11,7 @@ export default function WhoIsWatching() {
   const [editMode, setEditMode] = useState(false)
 
   return (
-    <div style={{ minHeight: '100svh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--nav-h) 16px 40px' }}>
       <div style={{ textAlign: 'center', width: '100%', maxWidth: 700 }}>
 
         <h1 style={{ fontSize: 'clamp(22px,4vw,40px)', fontWeight: 700, marginBottom: 'clamp(28px,5vw,48px)' }}>

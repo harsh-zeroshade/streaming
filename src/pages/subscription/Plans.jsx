@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import PlanCard from '../../components/subscription/PlanCard'
 import FAQItem from '../../components/support/FAQItem'
 import { plans } from '../../data/plans'
+import { api } from '../../services/apiService'
+import { authService } from '../../services/authService'
 
 const planFaqs = [
   { question: 'Can I switch plans at any time?', answer: 'Yes. Plan changes take effect at the start of your next billing cycle.' },
@@ -13,10 +15,25 @@ const planFaqs = [
 
 export default function Plans() {
   const navigate = useNavigate()
-  const [selected, setSelected] = useState('plan-standard')
+  const user = authService.getCurrentUser()
+  const [selected, setSelected] = useState(user?.plan || 'plan-standard')
+  const [saving, setSaving] = useState(false)
+
+  const handleContinue = async () => {
+    setSaving(true)
+    try {
+      if (authService.isSignedIn()) {
+        await api.post('/auth/update-plan', { plan: selected })
+        const stored = authService.getCurrentUser()
+        localStorage.setItem('nova_auth', JSON.stringify({ ...stored, plan: selected }))
+      }
+    } catch { /* proceed even if endpoint doesn't respond */ }
+    finally { setSaving(false) }
+    navigate('/')
+  }
 
   return (
-    <div style={{ minHeight: '100vh', paddingTop: 'clamp(80px,10vw,120px)', paddingBottom: 'clamp(60px,8vw,120px)' }}>
+    <div className="page-top" style={{ paddingBottom: 'clamp(60px,8vw,120px)' }}>
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 var(--pad)' }}>
 
         <div style={{ textAlign: 'center', marginBottom: 'clamp(32px,5vw,56px)' }}>
@@ -28,7 +45,6 @@ export default function Plans() {
           </p>
         </div>
 
-        {/* Plan cards — stack on mobile, 3-col on desktop */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -42,20 +58,19 @@ export default function Plans() {
 
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'clamp(40px,6vw,64px)' }}>
           <button
-            onClick={() => navigate('/')}
+            onClick={handleContinue}
+            disabled={saving}
             style={{
               height: 'clamp(48px,3.8vw,58px)',
               padding: '0 clamp(28px,3vw,48px)',
               borderRadius: 999,
               background: '#fff', color: '#111',
               fontWeight: 700, fontSize: 'clamp(14px,1.2vw,17px)',
-              border: 'none', cursor: 'pointer',
-              transition: 'opacity .2s',
+              border: 'none', cursor: saving ? 'not-allowed' : 'pointer',
+              opacity: saving ? .7 : 1, transition: 'opacity .2s',
             }}
-            onMouseEnter={e => e.currentTarget.style.opacity = '.88'}
-            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
           >
-            Continue with {plans.find(p => p.id === selected)?.name}
+            {saving ? 'Saving…' : `Continue with ${plans.find(p => p.id === selected)?.name}`}
           </button>
         </div>
 
@@ -69,7 +84,6 @@ export default function Plans() {
             ))}
           </div>
         </section>
-
       </div>
     </div>
   )

@@ -39,7 +39,7 @@ export default function SignUp() {
   }
 
   return (
-    <div style={{ minHeight: '100svh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px', background: 'var(--bg)', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--nav-h) 16px 40px', background: 'var(--bg)', position: 'relative' }}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
         <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1400&q=60" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: .08 }} aria-hidden="true" />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(23,24,26,.85)' }} />
