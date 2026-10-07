@@ -36,14 +36,14 @@ export default function SignIn() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--nav-h) 16px 40px', background: 'var(--bg)', position: 'relative' }}>
-      {/* Faint background image */}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingTop: 'var(--nav-h)', background: 'var(--bg)', position: 'relative' }}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
         <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1400&q=60" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: .08 }} aria-hidden="true" />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(23,24,26,.85)' }} />
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 400 }}>
+      <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }}>
+        <div style={{ width: '100%', maxWidth: 400 }}>
         {/* Logo */}
         <Link to="/" style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
           <span style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-.02em' }}>NOVA</span>
@@ -96,6 +96,7 @@ export default function SignIn() {
             Don't have an account?{' '}
             <Link to="/signup" style={{ color: 'rgba(255,255,255,.80)', fontWeight: 600 }}>Sign up</Link>
           </p>
+        </div>
         </div>
       </div>
     </div>
