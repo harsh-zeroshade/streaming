@@ -23,8 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
+# Environment variables — local secrets only
 .env
 .env.local
-.env.production
 backend/.env
