@@ -33,13 +33,13 @@ export default function SignUp() {
     if (!form.name || !form.email || !form.password) { setError('All fields are required.'); return }
     if (!form.consent) { setError('Please agree to the terms to continue.'); return }
     setLoading(true)
-    try { await authService.signUp(form.name, form.email, form.password); navigate('/plans') }
+    try { await authService.signUp(form.name, form.email, form.password); navigate('/plans', { replace: true }) }
     catch (err) { setError(err.message) }
     finally { setLoading(false) }
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingTop: 'var(--nav-h)', background: 'var(--bg)', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)', position: 'relative' }}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
         <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1400&q=60" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: .08 }} aria-hidden="true" />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(23,24,26,.85)' }} />

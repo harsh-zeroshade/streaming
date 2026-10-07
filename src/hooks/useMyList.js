@@ -1,18 +1,44 @@
 /**
- * My List hook — localStorage + backend sync when signed in.
+ * My List hook — user-scoped localStorage + backend sync.
+ * Each user's list is stored under a unique key so lists don't bleed between accounts.
  */
-import { useLocalStorage } from './useLocalStorage'
+import { useState, useEffect, useCallback } from 'react'
 import { api } from '../services/apiService'
 import { authService } from '../services/authService'
 
-export const useMyList = () => {
-  const [myList, setMyList] = useLocalStorage('nova_my_list', [])
+const getStorageKey = () => {
+  const user = authService.getCurrentUser()
+  return user?.id ? `nova_my_list_${user.id}` : 'nova_my_list_guest'
+}
 
-  const isInList = (id) => myList.some((item) => item.id === id)
+const readLocal = () => {
+  try { return JSON.parse(localStorage.getItem(getStorageKey()) || '[]') } catch { return [] }
+}
+const writeLocal = (items) => {
+  localStorage.setItem(getStorageKey(), JSON.stringify(items))
+}
+
+export const useMyList = () => {
+  const [myList, setMyListState] = useState(readLocal)
+
+  // Keep state in sync when user changes
+  useEffect(() => {
+    setMyListState(readLocal())
+  }, [authService.getCurrentUser()?.id])
+
+  const setMyList = useCallback((updater) => {
+    setMyListState(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      writeLocal(next)
+      return next
+    })
+  }, [])
+
+  const isInList = (id) => myList.some(item => item.id === id)
 
   const addToList = async (item) => {
     if (isInList(item.id)) return
-    setMyList((prev) => [item, ...prev])
+    setMyList(prev => [item, ...prev])
     if (authService.isSignedIn()) {
       try {
         await api.post('/mylist', {
@@ -26,12 +52,12 @@ export const useMyList = () => {
           genres:      item.genres,
           description: item.description,
         })
-      } catch { /* backend unavailable — local-only */ }
+      } catch { /* backend unavailable — local only */ }
     }
   }
 
   const removeFromList = async (id) => {
-    setMyList((prev) => prev.filter((item) => item.id !== id))
+    setMyList(prev => prev.filter(item => item.id !== id))
     if (authService.isSignedIn()) {
       try { await api.delete(`/mylist/${id}`) } catch { /* ignore */ }
     }
@@ -42,13 +68,12 @@ export const useMyList = () => {
     return addToList(item)
   }
 
-  /** Pull saved list from backend on mount */
-  const syncFromBackend = async () => {
+  // Pull saved list from backend (call this on app init / after login)
+  const syncFromBackend = useCallback(async () => {
     if (!authService.isSignedIn()) return
     try {
       const { items } = await api.get('/mylist')
-      if (!Array.isArray(items) || items.length === 0) return
-      // Remap backend schema → frontend schema
+      if (!Array.isArray(items)) return
       const mapped = items.map(i => ({
         id:          i.contentId,
         type:        i.type,
@@ -62,7 +87,7 @@ export const useMyList = () => {
       }))
       setMyList(mapped)
     } catch { /* ignore */ }
-  }
+  }, [setMyList])
 
   return { myList, isInList, addToList, removeFromList, toggleList, syncFromBackend }
 }

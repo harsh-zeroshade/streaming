@@ -10,6 +10,7 @@ const tmdbRoutes     = require('./routes/tmdbRoutes')
 const myListRoutes   = require('./routes/myListRoutes')
 const progressRoutes = require('./routes/progressRoutes')
 const playerRoutes   = require('./routes/playerRoutes')
+const profileRoutes  = require('./routes/profileRoutes')
 
 connectDB()
 
@@ -53,6 +54,7 @@ app.use('/api/tmdb',     tmdbRoutes)
 app.use('/api/mylist',   myListRoutes)
 app.use('/api/progress', progressRoutes)
 app.use('/api/player',   playerRoutes)
+app.use('/api/profiles', profileRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }))
